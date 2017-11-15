@@ -10,16 +10,16 @@ Install docker and docker-compose.
 
 Start docker.
 
-Create a folder named Sites inside user folder.
+Create a folder named ```Sites``` inside user folder.
 
-Create another folder named task inside Sites.
+Create another folder named ```framework``` inside ```Sites```.
 
-Decompress project_task.zip inside task.
+Copy all files to ```framework```.
 
-Go to project folder with Terminal:.
+Go to project folder with Terminal:
 
 ```
-$ cd Users/you/Sites/task
+$ cd Users/you/Sites/framework
 ```
 Enter this command:
 ```
@@ -30,7 +30,9 @@ $ docker-compose up
 ## RE-INSTALL AFTER EDITING
 
 Go to project folder:
-$ cd Users/you/Projects/dev/afn
+```
+$ cd Users/you/Sites/framework
+```
 Enter this command:
 ```
 $ docker-compose up -d --build
@@ -50,13 +52,13 @@ $ docker-compose up -d --build
 
 - To run project:
 ```
-$ cd User/you/Projects/dev/afn
+$ cd User/you/Sites/framework
 $ docker-compose up -d
 ```
 
-- To access web server:
+- To access web directory:
 ```
-$ cd Users/you/Projects/dev/afn/www
+$ cd Users/you/Sites/framework/www
 ```
 
 - To access MySQL database:
@@ -73,7 +75,7 @@ $ docker inspect <container-id>
 ```
 
 - To add a php extension or an apache module or others to project, edit Dockerfile inside 
-```Users/you/Sites/task/server```.
+```Users/you/Sites/framework/server```.
 
 - To access server command line(change <container-id> into id of the container which contain centos 7):
 ```
