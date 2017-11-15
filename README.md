@@ -1,8 +1,7 @@
 # afn-php-framework
 AFN Custom PHP Framework
 
-
-## DOCKER LOCAL DEVELOPMENT ENVIRONMENT
+You need to install docker to run project.
 
 
 ## INSTALL
