@@ -3,10 +3,10 @@ version: '2'
 services:
   server:
     build: ./docker/server
-    image: afn_web
+    image: afnphpframework_web
     ports:
-      - "6010:80"
-      - "4410:443"
+      - "6014:80"
+      - "4412:443"
     volumes:
       - ./app:/var/www/app
       - ./config:/var/www/config
@@ -25,13 +25,13 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOST=172.21.0.3
+      - PMA_HOST=172.18.0.2
       - PMA_PORT=3306
       - PMA_USER=root
       - PMA_PASSWORD=test
     restart: always
     ports:
-      - 6012:80
+      - 6016:80
     links:
       - "db:mysql"
     tty: true

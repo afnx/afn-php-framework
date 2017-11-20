@@ -25,7 +25,7 @@ define('RR_DIR', APP_DIR . '/routers');
 define('LT_DIR', ROOT_DIR . '/resources/layouts');
 define('RE_DIR', ROOT_DIR . '/routes');
 
-// include autoload to call classes easier
+// Include autoload to call classes easier
 require APP_DIR . '/autoload.php';
 
 // Start the app.

@@ -65,19 +65,19 @@ class View {
      */
 
     private function _load_view() {
-        if(strpos($this->view_file, "/views/") !== FALSE) {
+        if (strpos($this->view_file, "/views/") !== FALSE) {
             $this->view_file = substr($this->view_file, strpos($this->view_file, '/views/'));
         }
 
-        if(!defined(ROOT_DIR)) {
+        if (!defined(ROOT_DIR)) {
             $this->view_file = realpath(__DIR__ . '/../..') . '/resources/views/' . $this->view_file;
         } else {
             $this->view_file = ROOT_DIR . '/resources/views/' . $this->view_file;
         }
 
-        if(file_exists($this->view_file) && is_readable($this->view_file)) {
+        if (file_exists($this->view_file) && is_readable($this->view_file)) {
             $path = $this->view_file;
-        } else if(file_exists($default_file = realpath(__DIR__ . '/../..') . '/resources/views/default.php') && is_readable($default_file)) {
+        } else if (file_exists($default_file = realpath(__DIR__ . '/../..') . '/resources/views/default.php') && is_readable($default_file)) {
             $path = $default_file;
         } else {
             throw new Exception("No default view found!");
@@ -95,16 +95,64 @@ class View {
      */
 
     private function _parse_view($extra = NULL) {
+        // Create an alias of the template file property to save space
+        $view = $this->_view;
 
+        // Remove any PHP-style comments from the template 
+        $comment_pattern = array('#/\*.*?\*/#s', '#(?<!:)//.*#');
+        $view = preg_replace($comment_pattern, NULL, $view);
+
+        // Extract the main entry loop from the file
+        $pattern = '#.*{loop}(.*?){/loop}.*#is';
+        $entry_view = preg_replace($pattern, "$1", $view);
+
+        // Extract the header from the template if one exists
+        $header = trim(preg_replace('/^(.*)?{loop.*$/is', "$1", $view));
+        if ($header === $view) {
+            $header = NULL;
+        }
+
+        // Extract the footer from the template if one exists
+        $footer = trim(preg_replace('#^.*?{/loop}(.*)$#is', "$1", $view));
+        if ($footer === $view) {
+            $footer = NULL;
+        }
+
+        // Define a regex to match any template tag
+        $tag_pattern = '/{(\w+)}/';
+
+        //TODO: To-do items snipped for brevity... } 
+        //TODO: Write a static method to replace the template tags with entry data 
+        //TODO: Write a private currying function to facilitate tag replacement 
+    }
+
+    private function _curry($function, $num_args) {
+        return create_function('', "
+            // Store the passed arguments in an array 
+            \$args = func_get_args(); 
+            
+            // Execute the function if the right number of arguments were passed 
+            if( count(\$args)>=$num_args ) { 
+                return call_user_func_array('$function', \$args); 
+            } 
+            
+            // Export the function arguments as executable PHP code 
+            \$args = var_export(\$args, 1); 
+            
+            // Return a new function with the arguments stored otherwise 
+            return create_function('',' \$a = func_get_args(); \$z = ' . \$args . '; \$a = array_merge(\$z,\$a); 
+            
+            return call_user_func_array(\'$function\', \$a); ');
+        ");
     }
 
     public function get_layout($layout) {
 
-        if(strpos($layout, "/layouts/") !== FALSE) {
+        if (strpos($layout, "/layouts/") !== FALSE) {
             $layout = substr($layout, strpos($layout, '/layouts/'));
         }
 
-        if(!defined(ROOT_DIR)) {
+        if (!defined(ROOT_DIR)) {
             $layout_dir = realpath(__DIR__ . '/../..') . '/resources/layouts/' . $layout;
         } else {
             $layout_dir = ROOT_DIR . '/resources/layouts/' . $layout;
@@ -116,7 +164,7 @@ class View {
     }
 
     public static function render($view, array $params = []) {
-        if(file_exists($file = LT_DIR . "/{$view}.php")) {
+        if (file_exists($file = LT_DIR . "/{$view}.php")) {
 
             extract($params);
 

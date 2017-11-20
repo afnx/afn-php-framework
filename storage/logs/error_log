@@ -19,3 +19,31 @@ Stack trace:
 #2 /var/www/html/index.php(33): AFN\App\Core\App->run()
 #3 {main}
   thrown in /var/www/app/controllers/p404Controller.php on line 22
+[16-Nov-2017 16:31:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method AFN\App\Controllers\p404Controller::get_layout() in /var/www/app/controllers/p404Controller.php:22
+Stack trace:
+#0 /var/www/app/core/Server.php(39): AFN\App\Controllers\p404Controller->show_404()
+#1 /var/www/app/core/App.php(57): AFN\App\Core\Server::p404()
+#2 /var/www/html/index.php(33): AFN\App\Core\App->run()
+#3 {main}
+  thrown in /var/www/app/controllers/p404Controller.php on line 22
+[16-Nov-2017 16:31:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method AFN\App\Controllers\p404Controller::get_layout() in /var/www/app/controllers/p404Controller.php:22
+Stack trace:
+#0 /var/www/app/core/Server.php(39): AFN\App\Controllers\p404Controller->show_404()
+#1 /var/www/app/core/App.php(57): AFN\App\Core\Server::p404()
+#2 /var/www/html/index.php(33): AFN\App\Core\App->run()
+#3 {main}
+  thrown in /var/www/app/controllers/p404Controller.php on line 22
+[16-Nov-2017 16:31:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method AFN\App\Controllers\p404Controller::get_layout() in /var/www/app/controllers/p404Controller.php:22
+Stack trace:
+#0 /var/www/app/core/Server.php(39): AFN\App\Controllers\p404Controller->show_404()
+#1 /var/www/app/core/App.php(57): AFN\App\Core\Server::p404()
+#2 /var/www/html/index.php(33): AFN\App\Core\App->run()
+#3 {main}
+  thrown in /var/www/app/controllers/p404Controller.php on line 22
+[16-Nov-2017 16:37:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method AFN\App\Controllers\p404Controller::get_layout() in /var/www/app/controllers/p404Controller.php:22
+Stack trace:
+#0 /var/www/app/core/Server.php(39): AFN\App\Controllers\p404Controller->show_404()
+#1 /var/www/app/core/App.php(57): AFN\App\Core\Server::p404()
+#2 /var/www/html/index.php(33): AFN\App\Core\App->run()
+#3 {main}
+  thrown in /var/www/app/controllers/p404Controller.php on line 22
