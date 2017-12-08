@@ -12,8 +12,8 @@
  *
  * @author alifuatnumanoglu
  */
-
 return [
+    "version" => "1.0",
     "name" => "AFN Web Application",
     "description" => "AFN Personal Web Application",
     "default_lang" => "en"
