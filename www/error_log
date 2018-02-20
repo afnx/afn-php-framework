@@ -274,3 +274,4 @@ class View {
     }
 
 }
+[18-Feb-2018 22:54:49 UTC] PHP Warning:  Unterminated comment starting line 8 in /var/www/html/test.php on line 8

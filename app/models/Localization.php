@@ -87,7 +87,7 @@ class Localization extends Model {
      * @param boolean $forced 0 try to translate other languages, 1 translate only the given language
      * @return string The original content according to the given language or name of it
      */
-    public function translate(string $name, string $language = NULL, bool $forced = TRUE) {
+    public function translate($name, string $language = NULL, bool $forced = TRUE) {
 
         // Find a language
         $lastLang = (is_null($language) ? $this->user_lang : $language);
@@ -106,7 +106,7 @@ class Localization extends Model {
                 $returner = $resource["label"];
             } else {
                 // If the process fails, return only name of content
-                $returner = "@lang{'" . $name . "'}";
+                $returner = "**" . $name . "**";
             }
         } else {
             $returner = $resource["label"];
