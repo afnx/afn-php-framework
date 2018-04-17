@@ -57,9 +57,9 @@ class ControllerFactory
         $result = $router->parse($_SERVER['REQUEST_URI']);
 
         // Get parameters and check them
-        $this->controllerName = isset($result["controller"]) ? Secure::controlVar($result["controller"]) : 'DefaultController';
-        $this->actionName = isset($result["action"]) ? Secure::controlVar($result["action"]) : 'display';
-        $this->params = isset($result["params"]) ? Secure::controlVar($result["params"]) : ['NULL'];
+        $this->controllerName = isset($result["controller"]) ? ucfirst(strtolower(Secure::controlVar($result["controller"]))) : 'DefaultController';
+        $this->actionName = isset($result["action"]) ? ucfirst(strtolower(Secure::controlVar($result["action"]))) : 'display';
+        $this->params = isset($result["params"]) ? ucfirst(strtolower(Secure::controlVar($result["params"]))) : ['NULL'];
 
         // Check whether the class file exists
         if (file_exists($file = CR_DIR . "/{$this->controllerName}.php")) {
