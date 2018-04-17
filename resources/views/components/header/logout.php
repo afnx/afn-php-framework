@@ -1,0 +1,1 @@
+<a class="btn btn-primary ml-2" href="logout" role="button">@data{header_loggedin_username} Logout</a>

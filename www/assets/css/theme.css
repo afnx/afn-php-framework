@@ -1,0 +1,121 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+.highlight {
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+  border-radius: 4px;
+}
+
+.bd-lead {
+  max-width: 80%;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.indicator {
+  max-width: 80%;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eaeceff3;
+}
+
+.form-search {
+  width: 100%;
+  max-width: 700px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-search .form-control {
+  position: relative;
+  width: 70%;
+}
+
+.form-search button {
+  width: 20%;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+.thank-you-l {
+  font-family: 'Tangerine', cursive;
+  font-size: 5rem;
+  color: #F7786B;
+}
+
+.more-menu {
+  color: #DC4C46 !important;
+}
+
+.list-features > ul {
+  list-style: none;
+}
+
+.list-features > li:before {
+  content: "+";
+  margin-right: 4px;
+  font-size: 1.2rem;
+}
+
+.list-hints > ul {
+  list-style: none;
+}
+
+.list-hints > li:before {
+  content: "-";
+  margin-right: 4px;
+  font-size: 1.2rem;
+}
+
+code {
+  font-size: 80%;
+}

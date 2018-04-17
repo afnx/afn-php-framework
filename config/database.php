@@ -1,16 +1,16 @@
 <?php
 
-/*
+/**
  * This file was created by AFN.
  * If you think that there is a notifiable issue
  * affecting the file, please contact AFN.
- * AFN <afn@alifuatnumanoglu.com>
+ * @author AFN <afn@alifuatnumanoglu.com>
  */
 
 /**
  * Databases Credential
  *
- * @author alifuatnumanoglu
+ * @package AFN-PHP-FRAMEWORK
  */
 return [
     "1" => [
@@ -20,6 +20,6 @@ return [
         "PASSWORD" => "test",
         "PORT" => "3306",
         "SOCKET" => "",
-        "DSN" => "mysql:host=172.18.0.3;port=3306;dbname=db_afntest;charset=utf8"
-    ]
+        "DSN" => "mysql:host=172.18.0.3;port=3306;dbname=db_afntest;charset=utf8",
+    ],
 ];

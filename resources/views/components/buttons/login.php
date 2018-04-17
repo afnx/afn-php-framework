@@ -1,0 +1,1 @@
+<a class="btn btn-primary" href="login" role="button">Login Now</a>

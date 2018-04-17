@@ -1,10 +1,10 @@
 <?php
 
-/*
+/**
  * This file was created by AFN.
  * If you think that there is a notifiable issue
  * affecting the file, please contact AFN.
- * AFN <afn@alifuatnumanoglu.com>
+ * @author AFN <afn@alifuatnumanoglu.com>
  */
 
 /**
@@ -12,8 +12,8 @@
  *
  * <DO NOT CHANGE THIS FILE!>
  *
- * @author alifuatnumanoglu
+ * @package AFN-PHP-FRAMEWORK
  */
 return [
-    "version" => "1.0"
+    "version" => "1.0", // DON'T CHANGE AND REMOVE THIS LINE
 ];

@@ -4,7 +4,7 @@
  * This file was created by AFN.
  * If you think that there is a notifiable issue
  * affecting the file, please contact AFN.
- * AFN <afn@alifuatnumanoglu.com>
+ * @author AFN <afn@alifuatnumanoglu.com>
  */
 
 namespace AFN\App\Models;
@@ -12,72 +12,75 @@ namespace AFN\App\Models;
 use AFN\App\Core\Model;
 
 /**
+ * Class Localization
  * Localization Model
  *
  * It provides all localization operations by fetching data from Localization table.
  * It bases on languages.
  *
- * @author alifuatnumanoglu
+ * @package AFN-PHP-FRAMEWORK
  */
-class Localization extends Model {
+class Localization extends Model
+{
 
     /**
      * Stores the row id of content from the table
      * @var integer
      */
-    Public $ID;
+    public $id;
 
     /**
      * Stores name of content from the table
      * @var string
      */
-    Public $identifier;
+    public $identifier;
 
     /**
      * Stores original content from the table
      * @var string
      */
-    Public $label;
+    public $label;
 
     /**
      * Stores language of content from the table
      * @var string
      */
-    Public $lang;
+    public $lang;
 
     /**
      * Stores delete status of content from the table
      * @var integer
      */
-    Public $isDeleted;
+    public $is_deleted;
 
     /**
      * Stores user site language
      * @var string
      */
-    private $user_lang;
+    private $userLang;
 
     /**
      * Construct the class by carrying out basic operations
-     * @param integer $ID The row id of the expected content in the database
+     * @param integer $id The row id of the expected content in the database
      * @param integer $dbno The database id
      */
-    public function __construct($ID = NULL, $dbno = 1) {
+    public function __construct($id = null, $dbno = 1)
+    {
 
         // Make db connection
         parent::__construct($dbno);
 
         // If an id is received from outside, pass it
-        $this->ID = $ID;
+        $this->id = $id;
 
         // Find the user language and pass it
-        $this->user_lang = isset($_SESSION["lang"]) ? $_SESSION["lang"] : $GLOBALS["settings"]["default_lang"];
+        $this->userLang = isset($_SESSION["language"]) ? $_SESSION["language"] : \AFN\App\Core\Server::detectLang();
 
         // Pass the table name to core model
-        $this->table = get_called_class();
+        $this->table = (new \ReflectionClass($this))->getShortName();
 
         // Fetch data from database and pass it to properties
-        $this->refresh($ID);
+        $this->refresh($id);
     }
 
     /**
@@ -87,22 +90,23 @@ class Localization extends Model {
      * @param boolean $forced 0 try to translate other languages, 1 translate only the given language
      * @return string The original content according to the given language or name of it
      */
-    public function translate($name, string $language = NULL, bool $forced = TRUE) {
+    public function translate($name, string $language = null, bool $forced = true)
+    {
 
         // Find a language
-        $lastLang = (is_null($language) ? $this->user_lang : $language);
+        $lastLang = (is_null($language) ? $this->userLang : $language);
 
         // Prepare the query
-        $query = "SELECT label FROM Localization WHERE lang=:lang AND identifier=:identifier AND isDeleted<>1 LIMIT 1";
+        $query = "SELECT label FROM Localization WHERE lang=:lang AND identifier=:identifier AND is_deleted<>1 LIMIT 1";
 
         // Fetch the content
-        $resource = $this->fetch($query, [":lang" => $lastLang, ":identifier" => $name], TRUE);
+        $resource = $this->fetch($query, [":lang" => $lastLang, ":identifier" => $name], true);
 
         // If the process is not ok, try other languages when the parameter of $forced is TRUE
-        if($this->recordcount != 1) {
-            if($lastLang != $GLOBALS["settings"]["default_lang"] && $forced == TRUE) {
+        if ($this->recordCount != 1) {
+            if ($lastLang != $GLOBALS["settings"]["default_lang"] && $forced == true) {
                 // Fetch it again for other languages
-                $resource = $this->fetch($query, [":lang" => $GLOBALS["settings"]["default_lang"], ":identifier" => $name], TRUE);
+                $resource = $this->fetch($query, [":lang" => $GLOBALS["settings"]["default_lang"], ":identifier" => $name], true);
                 $returner = $resource["label"];
             } else {
                 // If the process fails, return only name of content

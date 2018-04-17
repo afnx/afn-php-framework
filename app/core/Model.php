@@ -4,7 +4,7 @@
  * This file was created by AFN.
  * If you think that there is a notifiable issue
  * affecting the file, please contact AFN.
- * AFN <afn@alifuatnumanoglu.com>
+ * @author AFN <afn@alifuatnumanoglu.com>
  */
 
 namespace AFN\App\Core;
@@ -12,11 +12,13 @@ namespace AFN\App\Core;
 use PDO;
 
 /**
+ * Class Model
  * Mysql Database Operations
  *
- * @author alifuatnumanoglu
+ * @package AFN-PHP-FRAMEWORK
  */
-class Model {
+class Model
+{
 
     /**
      * Stores database id from config file
@@ -34,7 +36,7 @@ class Model {
      * Stores number of records after an operation
      * @var integer
      */
-    public $recordcount;
+    public $recordCount;
 
     /**
      * Stores the name of table that will be called
@@ -47,27 +49,41 @@ class Model {
      * The credential is chosen according to database id
      * @param integer $dbno database id
      */
-    public function __construct($dbno = 1) {
+    public function __construct($dbno = 1)
+    {
         try {
             // Check if ROOT_DIR is defined then use it or add it manually for the config file path
-            if(!defined(ROOT_DIR)) {
+            if (!defined(ROOT_DIR)) {
                 $db_dir = realpath(__DIR__ . '/../..') . '/config/database.php';
             } else {
                 $db_dir = ROOT_DIR . '/config/database.php';
             }
 
             // Include the database config file
-            $database = require_once $db_dir;
+            $database = require $db_dir;
 
             // Run database connection with PDO and pass it to the variable
             $this->conn = new PDO($database[$dbno]["DSN"], $database[$dbno]["USERNAME"], $database[$dbno]["PASSWORD"], [
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="NO_BACKSLASH_ESCAPES"'
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="NO_BACKSLASH_ESCAPES"',
             ]);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             // If the process fails, throw an error
-            echo $e->getMessage();
+            die($e->getMessage());
+        }
+    }
+
+    /**
+     * Closes database connection as soon as there are no other references
+     * to a particular object, or in any order during the shutdown sequence.
+     */
+    public function __destruct()
+    {
+        try {
+            $this->conn = null; //Closes connection
+        } catch (PDOException $e) {
+            die($e->getMessage());
         }
     }
 
@@ -76,7 +92,8 @@ class Model {
      * @param string $property
      * @param mixed $value
      */
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         $this->$property = $value;
     }
 
@@ -85,8 +102,9 @@ class Model {
      * @param string $property
      * @return mixed
      */
-    public function __get($property) {
-        if(isset($this->$property)) {
+    public function __get($property)
+    {
+        if (isset($this->$property)) {
             return $this->$property;
         }
     }
@@ -99,19 +117,20 @@ class Model {
      * @param boolean $count The parameter that will decide as to whether or not to calculate record count
      * @return boolean
      */
-    public function execute_on_query($query, array $params = [], $count = FALSE) {
+    public function executeOnQuery($query, array $params = [], $count = false)
+    {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
-            if($count == TRUE) {
-                $this->recordcount = $stmt->rowCount();
+            if ($count == true) {
+                $this->recordCount = $stmt->rowCount();
             } else {
-                $this->recordcount = 0;
+                $this->recordCount = 0;
             }
             return $stmt;
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
@@ -119,7 +138,8 @@ class Model {
      * @param object $stmt
      * @return array
      */
-    public function get_num_rows($stmt) {
+    public function getNumRows($stmt)
+    {
         return (is_resource($stmt) ? $stmt->fetchColumn() : 0);
     }
 
@@ -128,9 +148,10 @@ class Model {
      * @param string $tableName
      * @return boolean or array
      */
-    public function get_columns_name(string $tableName = "") {
-        if(!empty($this->table) || !empty($tableName)) {
-            $tname = isset($tableName) ? $tableName : $this->table;
+    public function getColumnsName(string $tableName = "")
+    {
+        if (!empty($this->table) || !empty($tableName)) {
+            $tname = !empty($tableName) ? $tableName : $this->table;
             $query = "DESCRIBE " . $tname;
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
@@ -138,7 +159,7 @@ class Model {
 
             return $tableFields;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -147,9 +168,10 @@ class Model {
      * @param array $array
      * @return string
      */
-    public function json_turkish(array $array) {
-        foreach($array as $record) {
-            foreach($record as $key => $og) {
+    public function jsonTurkish(array $array)
+    {
+        foreach ($array as $record) {
+            foreach ($record as $key => $og) {
                 $colm[] = '"' . $key . '":"' . $og . '"';
             }
             $rec[] = '{' . implode(',', $colm) . '}';
@@ -162,22 +184,23 @@ class Model {
 
     /**
      * Fetches data with given id from the database and passes it to properties
-     * @param integer $ID The row id of the expected content in the database
+     * @param integer $id The row id of the expected content in the database
      * @return string The Error
      */
-    public function refresh($ID) {
-        if(is_numeric($ID)) {
+    public function refresh($id)
+    {
+        if (is_numeric($id)) {
             $query = "SELECT * FROM " . $this->table . " WHERE " . key($this) . " = :id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id', $ID, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            if(!$stmt->execute()) {
+            if (!$stmt->execute()) {
                 $error = $stmt->errorInfo();
                 return 'ERROR: ' . $error[2];
             } else {
-                $result = $stmt->fetch(PDO::FETCH_BOTH);
-                if(isset($result)) {
-                    foreach($result as $name => $value) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (isset($result)) {
+                    foreach ($result as $name => $value) {
                         $this->$name = $value;
                     }
                 }
@@ -191,16 +214,17 @@ class Model {
      * @param array $params The Parameters that will be inserted to the query
      * @return string The error or nothing
      */
-    public function refresh_procedure($query, array $params = []) {
-        if($query != "") {
+    public function refreshProcedure($query, array $params = [])
+    {
+        if ($query != "") {
             $stmt = $this->conn->prepare($query);
-            if(!$stmt->execute($params)) {
+            if (!$stmt->execute($params)) {
                 $error = $stmt->errorInfo();
                 return 'ERROR: ' . $error[2];
             } else {
-                $result = $stmt->fetch(PDO::FETCH_BOTH);
-                if($result) {
-                    foreach($result as $name => $value) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result) {
+                    foreach ($result as $name => $value) {
                         $this->$name = $value;
                     }
                 }
@@ -212,11 +236,12 @@ class Model {
      * Returns property names and property values of child classes as JSON format
      * @return string The property names and property values as JSON format
      */
-    public function to_json() {
+    public function toJson()
+    {
         $classItems = get_object_vars($this);
         $json = "{";
-        foreach($classItems as $key => $val) {
-            if($key !== 'table' && $key !== 'conn' && !is_numeric($key)) {
+        foreach ($classItems as $key => $val) {
+            if ($key !== 'table' && $key !== 'conn' && !is_numeric($key)) {
                 $json .= "\"" . $key . "\":\"" . $val . "\",";
             }
         }
@@ -232,74 +257,78 @@ class Model {
      * by using new data.
      * @return int
      */
-    public function save() {
+    public function save()
+    {
         // Get class properties and pass them
         $classitems = get_object_vars($this);
 
         // Get column names
-        $columns = $this->get_columns_name();
+        $columns = $this->getColumnsName();
 
         // Create needed arrays
-        $data_fields = [];
-        $data_names = [];
+        $dataFields = [];
+        $dataNames = [];
         $params = [];
 
         // Push names and values of properties to arrays if property names does not match column names
-        foreach($classitems as $claskey => $clasval) {
-            foreach($columns as $colkey => $colval) {
-                if($claskey == $colval) {
-                    $data_fields[] = $colval;
-                    $data_names[] = ":" . $colval;
-
+        foreach ($classitems as $claskey => $clasval) {
+            foreach ($columns as $colkey => $colval) {
+                if ($claskey == $colval) {
+                    $dataFields[] = "`" . $colval . "`";
+                    $dataNames[] = ":" . $colval;
                     // Determine the form of NULL according to numericalness of $classval
-                    if(is_numeric($clasval)) {
-                        $params[":" . $colval] = str_replace("'on'", "True", str_replace("'NULL'", "NULL", is_null($clasval) ? "NULL" : $clasval));
+                    if (is_numeric($clasval)) {
+                        $params[":" . $colval] = str_replace("'on'", "True", str_replace("'NULL'", "NULL", (is_null($clasval) ? "NULL" : $clasval)));
                     } else {
-                        $params[":" . $colval] = str_replace("'on'", "True", str_replace("'NULL'", "NULL", "'" . is_null($clasval) ? "NULL" : $clasval . "'"));
+                        $params[":" . $colval] = str_replace("'on'", "True", str_replace("'NULL'", "NULL", (is_null($clasval) ? null : $clasval)));
                     }
                 }
             }
         }
 
         // Begin the transaction
-        $this->conn->beginTransaction();
+        //$this->conn->beginTransaction();
 
         // If the id exists, the process is updating. However, if not, the process is inserting.
-        if(!is_numeric($this->ID) || $this->ID == 0) {
-            $sql = "INSERT INTO " . $this->table . " (" . implode(",", $data_fields) . ") VALUES " . implode(',', $data_names);
+        if (!is_numeric($this->id) || $this->id == 0) {
+            $sql = "INSERT INTO " . $this->table . " (" . implode(",", $dataFields) . ") VALUES (" . implode(',', $dataNames) . ")";
         } else {
             $sql = "UPDATE " . $this->table . " SET ";
-            foreach($data_fields as $fval) {
-                foreach($data_names as $nval) {
-                    if($fval == str_replace(":", "", $nval) && $fval != "ID") {
-                        $sql .= $fval . "=" . $nval;
+            $numItems = count($dataFields);
+            $i = 0;
+            foreach ($dataFields as $fval) {
+                foreach ($dataNames as $nval) {
+                    if (str_replace("`", "", $fval) == str_replace(":", "", $nval) && str_replace("`", "", $fval) != "id") {
+                        $sql .= $fval . " = " . $nval;
+                        if (++$i != $numItems - 1) {
+                            $sql .= ', ';
+                        }
                     }
                 }
             }
-            $sql .= " WHERE ID=:ID";
+            $sql .= " WHERE id = :id";
         }
 
         // Prepare a statement for above execution
         $stmt = $this->conn->prepare($sql);
 
         try {
-
             $stmt->execute($params);
 
             // Get last inserted id after inserting process or get the id of updated row
-            if(substr($sql, 0, 6) == "INSERT") {
+            if (substr($sql, 0, 6) == "INSERT") {
                 $operation = 1;
-                $last_insert_id = $this->conn->lastInsertId();
+                $lastInsertId = $this->conn->lastInsertId();
             } else {
                 $operation = 2;
-                $last_insert_id = $this->ID;
+                $lastInsertId = $this->id;
             }
 
             // History operation will be here soon
-            // $this->new_history($lastInsert, $operation);
+            // $this->newHistory($lastInsert, $operation);
 
-            return $last_insert_id;
-        } catch(PDOException $e) {
+            return $lastInsertId;
+        } catch (PDOException $e) {
             // If the execution fails, throw an error
             echo $e->getMessage();
             return 0;
@@ -310,23 +339,24 @@ class Model {
     }
 
     /**
-     * Generate a globally unique identifier
+     * Generates a globally unique identifier
      * @return string
      */
-    public function custom_create_guid() {
-        if(function_exists('com_create_guid')) {
+    public function customCreateGuid()
+    {
+        if (function_exists('com_create_guid')) {
             return com_create_guid();
         } else {
             mt_srand((double) microtime() * 10000); // Optional for php 4.2.0 and up.
             $charid = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45); // "-"
-            $uuid = ""// "{"
-                    . substr($charid, 0, 8) . $hyphen
-                    . substr($charid, 8, 4) . $hyphen
-                    . substr($charid, 12, 4) . $hyphen
-                    . substr($charid, 16, 4) . $hyphen
-                    . substr($charid, 20, 12)
-                    . ""; // "}"
+            $uuid = "" // "{"
+             . substr($charid, 0, 8) . $hyphen
+            . substr($charid, 8, 4) . $hyphen
+            . substr($charid, 12, 4) . $hyphen
+            . substr($charid, 16, 4) . $hyphen
+            . substr($charid, 20, 12)
+                . ""; // "}"
             return $uuid;
         }
     }
@@ -336,31 +366,32 @@ class Model {
      * @param type $force 0 permanent deleting, 1 recoverable deleting
      * @return boolean The result of operation
      */
-    public function delete($force = 0) {
+    public function delete($force = 0)
+    {
         // Check requested operation and run it
-        if($force == 1) {
+        if ($force == 1) {
             // Permanent deleting
-            $sql = "DELETE FROM " . $this->table . " WHERE " . key($this) . "=:ID";
+            $sql = "DELETE FROM " . $this->table . " WHERE " . key($this) . "=:id";
         } else {
             // Recoverable deleting
-            $sql = "UPDATE " . $this->table . " SET isDeleted=1 WHERE " . key($this) . "=:ID";
+            $sql = "UPDATE " . $this->table . " SET is_deleted=1 WHERE " . key($this) . "=:id";
         }
 
         // Prepare a statement for execution
         $stmt = $this->conn->prepare($sql);
 
         // Send id of record that will be deleted
-        $stmt->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
         try {
             $stmt->execute();
             // History operation will be here soon
-            // $this->new_history($this->ID, 3);
-            return TRUE;
-        } catch(PDOException $e) {
+            // $this->newHistory($this->id, 3);
+            return true;
+        } catch (PDOException $e) {
             // If the execution fails, throw an error
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
@@ -368,18 +399,19 @@ class Model {
      * Deletes all records in the given table
      * @return boolean
      */
-    public function delete_all() {
+    public function deleteAll()
+    {
         $sql = "DELETE FROM " . $this->table;
         $stmt = $this->conn->prepare($sql);
         try {
             $stmt->execute();
             // history operation
-            // $this->new_history($this->ID, 3);
-            return TRUE;
-        } catch(PDOException $e) {
+            // $this->newHistory($this->id, 3);
+            return true;
+        } catch (PDOException $e) {
             // If the execution fails, throw an error
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
@@ -387,92 +419,99 @@ class Model {
      * Returns the count of records in the given table
      * @return integer The count of records
      */
-    public function table_record_count() {
+    public function tableRecordCount()
+    {
         $query = "SELECT COUNT(*) FROM " . $this->table;
         $result = $this->conn->query($query)->fetchColumn();
         return $result;
     }
 
-    public function fetch($query, array $params = [], $count = FALSE) {
+    /**
+     * Fetches all remaining results with given query and counts it by using passed parameters
+     * @param string $query
+     * @param array $params
+     * @param boolean $count
+     * @return mixed
+     */
+    public function fetch($query, array $params = [], $count = false)
+    {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
-            if($count == TRUE) {
-                $this->recordcount = $stmt->rowCount();
+            if ($count == true) {
+                $this->recordCount = $stmt->rowCount();
             } else {
-                $this->recordcount = 0;
+                $this->recordCount = 0;
             }
-            return $stmt->fetch();
-        } catch(PDOException $e) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
-    public function fetch_all($query, array $params = [], $count = FALSE) {
+    /**
+     * Returns an array containing all of the result set rows with given query and counts it by using passed parameters
+     * @param string $query
+     * @param array $params
+     * @param boolean $count
+     * @return array
+     */
+    public function fetchAll($query, array $params = [], $count = false)
+    {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
-            if($count == TRUE) {
-                $this->recordcount = $stmt->rowCount();
+            if ($count == true) {
+                $this->recordCount = $stmt->rowCount();
             } else {
-                $this->recordcount = 0;
+                $this->recordCount = 0;
             }
-            return $stmt->fetchAll();
-        } catch(PDOException $e) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
-    public function query($query, array $params = []) {
+    /**
+     * Executes the query passed parametes
+     * @param string $query
+     * @param array $params
+     * @return boolean
+     */
+    public function query($query, array $params = [])
+    {
         $stmt = $this->conn->prepare($query);
         try {
             return $stmt->execute($params);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
 
-    public function fetch_column($query, array $params = [], $count = FALSE) {
+    /**
+     * Returns a single column from the next row of a result set and counts it by using passed parameters
+     * @param string $query
+     * @param array $params
+     * @param boolean $count
+     * @return boolean
+     */
+    public function fetchColumn($query, array $params = [], $count = false)
+    {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
-            if($count == TRUE) {
-                $this->recordcount = $stmt->rowCount();
+            if ($count == true) {
+                $this->recordCount = $stmt->rowCount();
             } else {
-                $this->recordcount = 0;
+                $this->recordCount = 0;
             }
             return $stmt->fetchColumn();
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
-
-    /*
-     * History operation will be in use soon
-     * @param type $ID
-     * @param type $operation
-     * @param type $userID
-     * @return boolean
-
-      public function new_history($ID, $operation, $userID = 0) {
-      //operation 1-New 2-Update 3-Delete
-      $sql = "INSER INTO History (tableName,tableID,userID,operation,updated) VALUES (':table',:ID,:userID,:operation,NOW())";
-      $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':table', $this->table, PDO::PARAM_STR);
-      $stmt->bindParam(':ID', $ID, PDO::PARAM_INT);
-      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-      $stmt->bindParam(':operation', $operation, PDO::PARAM_INT);
-      try {
-      $stmt->execute();
-      return TRUE;
-      } catch(PDOException $e) {
-      echo $e->getMessage();
-      return FALSE;
-      }
-      }
-     */
 }

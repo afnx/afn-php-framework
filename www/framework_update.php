@@ -39,7 +39,7 @@ if($getVersions != '') {
             //Download The File If We Do Not Have It
             if(!is_file($_ENV['site']['files']['includes-dir'] . '/UPDATES/MMD-CMS-' . $aV . '.zip')) {
                 echo '<p>Downloading New Update</p>';
-                $newUpdate = file_get_contents('http://your-server.com/CMS-UPDATE-PACKAGES/MMD-CMS-' . $aV . '.zip');
+                $newUpdate = file_get_contents('http://wwww.alifuatnumanoglu.com//CMS-UPDATE-PACKAGES/MMD-CMS-' . $aV . '.zip');
                 if(!is_dir($_ENV['site']['files']['includes-dir'] . '/UPDATES/')) {
                     mkdir($_ENV['site']['files']['includes-dir'] . '/UPDATES/');
                 }

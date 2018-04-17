@@ -1,19 +1,21 @@
 <?php
 
-/*
+/**
  * This file was created by AFN.
  * If you think that there is a notifiable issue
  * affecting the file, please contact AFN.
- * AFN <afn@alifuatnumanoglu.com>
+ * @author AFN <afn@alifuatnumanoglu.com>
  */
 
 use AFN\App\Routers\WebRouter;
 
-/*
+/**
+ * Web Routes
  * All web routes is added below.
+ *
+ * @package AFN-PHP-FRAMEWORK
  */
 
-
-WebRouter::add_route("/(.*)/(.*)/([0-9]{1,6})", array("controller", "action", "params"));
-WebRouter::add_route("/(.*)/(.*)", array("controller", "action"));
-WebRouter::add_route("/(.*)", array("catchall"));
+WebRouter::addRoute("/(.*)/(.*)/([0-9]{1,6})", array("controller", "action", "params"));
+WebRouter::addRoute("/(.*)/(.*)", array("controller", "action"));
+WebRouter::addRoute("/(.*)", array("catchall"));
