@@ -6,7 +6,7 @@
 
 FROM centos:centos7
 
-MAINTAINER AFN <afn@alifuatnumanoglu.com>
+MAINTAINER AFN <report@alifuatnumanoglu.com>
 
 
 # -----------------------------------------------------------------------------
