@@ -100,20 +100,20 @@ class Localization extends Model
         $query = "SELECT label FROM Localization WHERE lang=:lang AND identifier=:identifier AND is_deleted<>1 LIMIT 1";
 
         // Fetch the content
-        $resource = $this->fetch($query, [":lang" => $lastLang, ":identifier" => $name], true);
+        $resource = $this->fetch($query, [":lang" => $lastLang, ":identifier" => $name], true, __CLASS__);
 
         // If the process is not ok, try other languages when the parameter of $forced is TRUE
         if ($this->recordCount != 1) {
             if ($lastLang != $GLOBALS["settings"]["default_lang"] && $forced == true) {
                 // Fetch it again for other languages
-                $resource = $this->fetch($query, [":lang" => $GLOBALS["settings"]["default_lang"], ":identifier" => $name], true);
-                $returner = $resource["label"];
+                $resource = $this->fetch($query, [":lang" => $GLOBALS["settings"]["default_lang"], ":identifier" => $name], true, __CLASS__);
+                $returner = $resource->label;
             } else {
                 // If the process fails, return only name of content
                 $returner = "**" . $name . "**";
             }
         } else {
-            $returner = $resource["label"];
+            $returner = $resource->label;
         }
 
         // Return original content or name of it

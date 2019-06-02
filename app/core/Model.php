@@ -17,8 +17,7 @@ use PDO;
  *
  * @package AFN-PHP-FRAMEWORK
  */
-class Model
-{
+class Model {
 
     /**
      * Stores database id from config file
@@ -49,8 +48,7 @@ class Model
      * The credential is chosen according to database id
      * @param integer $dbno database id
      */
-    public function __construct($dbno = 1)
-    {
+    public function __construct($dbno = 1) {
         try {
             // Check if ROOT_DIR is defined then use it or add it manually for the config file path
             if (!defined(ROOT_DIR)) {
@@ -78,8 +76,7 @@ class Model
      * Closes database connection as soon as there are no other references
      * to a particular object, or in any order during the shutdown sequence.
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         try {
             $this->conn = null; //Closes connection
         } catch (PDOException $e) {
@@ -92,8 +89,7 @@ class Model
      * @param string $property
      * @param mixed $value
      */
-    public function __set($property, $value)
-    {
+    public function __set($property, $value) {
         $this->$property = $value;
     }
 
@@ -102,8 +98,7 @@ class Model
      * @param string $property
      * @return mixed
      */
-    public function __get($property)
-    {
+    public function __get($property) {
         if (isset($this->$property)) {
             return $this->$property;
         }
@@ -117,8 +112,7 @@ class Model
      * @param boolean $count The parameter that will decide as to whether or not to calculate record count
      * @return boolean
      */
-    public function executeOnQuery($query, array $params = [], $count = false)
-    {
+    public function executeOnQuery($query, array $params = [], $count = false) {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
@@ -138,8 +132,7 @@ class Model
      * @param object $stmt
      * @return array
      */
-    public function getNumRows($stmt)
-    {
+    public function getNumRows($stmt) {
         return (is_resource($stmt) ? $stmt->fetchColumn() : 0);
     }
 
@@ -148,8 +141,7 @@ class Model
      * @param string $tableName
      * @return boolean or array
      */
-    public function getColumnsName(string $tableName = "")
-    {
+    public function getColumnsName(string $tableName = "") {
         if (!empty($this->table) || !empty($tableName)) {
             $tname = !empty($tableName) ? $tableName : $this->table;
             $query = "DESCRIBE " . $tname;
@@ -168,8 +160,7 @@ class Model
      * @param array $array
      * @return string
      */
-    public function jsonTurkish(array $array)
-    {
+    public function jsonTurkish(array $array) {
         foreach ($array as $record) {
             foreach ($record as $key => $og) {
                 $colm[] = '"' . $key . '":"' . $og . '"';
@@ -187,8 +178,7 @@ class Model
      * @param integer $id The row id of the expected content in the database
      * @return string The Error
      */
-    public function refresh($id)
-    {
+    public function refresh($id) {
         if (is_numeric($id)) {
             $query = "SELECT * FROM " . $this->table . " WHERE " . key($this) . " = :id";
             $stmt = $this->conn->prepare($query);
@@ -214,8 +204,7 @@ class Model
      * @param array $params The Parameters that will be inserted to the query
      * @return string The error or nothing
      */
-    public function refreshProcedure($query, array $params = [])
-    {
+    public function refreshProcedure($query, array $params = []) {
         if ($query != "") {
             $stmt = $this->conn->prepare($query);
             if (!$stmt->execute($params)) {
@@ -236,8 +225,7 @@ class Model
      * Returns property names and property values of child classes as JSON format
      * @return string The property names and property values as JSON format
      */
-    public function toJson()
-    {
+    public function toJson() {
         $classItems = get_object_vars($this);
         $json = "{";
         foreach ($classItems as $key => $val) {
@@ -257,8 +245,7 @@ class Model
      * by using new data.
      * @return int
      */
-    public function save()
-    {
+    public function save() {
         // Get class properties and pass them
         $classitems = get_object_vars($this);
 
@@ -288,7 +275,6 @@ class Model
 
         // Begin the transaction
         //$this->conn->beginTransaction();
-
         // If the id exists, the process is updating. However, if not, the process is inserting.
         if (!is_numeric($this->id) || $this->id == 0) {
             $sql = "INSERT INTO " . $this->table . " (" . implode(",", $dataFields) . ") VALUES (" . implode(',', $dataNames) . ")";
@@ -342,8 +328,7 @@ class Model
      * Generates a globally unique identifier
      * @return string
      */
-    public function customCreateGuid()
-    {
+    public function customCreateGuid() {
         if (function_exists('com_create_guid')) {
             return com_create_guid();
         } else {
@@ -351,12 +336,12 @@ class Model
             $charid = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45); // "-"
             $uuid = "" // "{"
-             . substr($charid, 0, 8) . $hyphen
-            . substr($charid, 8, 4) . $hyphen
-            . substr($charid, 12, 4) . $hyphen
-            . substr($charid, 16, 4) . $hyphen
-            . substr($charid, 20, 12)
-                . ""; // "}"
+                    . substr($charid, 0, 8) . $hyphen
+                    . substr($charid, 8, 4) . $hyphen
+                    . substr($charid, 12, 4) . $hyphen
+                    . substr($charid, 16, 4) . $hyphen
+                    . substr($charid, 20, 12)
+                    . ""; // "}"
             return $uuid;
         }
     }
@@ -366,8 +351,7 @@ class Model
      * @param type $force 0 permanent deleting, 1 recoverable deleting
      * @return boolean The result of operation
      */
-    public function delete($force = 0)
-    {
+    public function delete($force = 0) {
         // Check requested operation and run it
         if ($force == 1) {
             // Permanent deleting
@@ -399,8 +383,7 @@ class Model
      * Deletes all records in the given table
      * @return boolean
      */
-    public function deleteAll()
-    {
+    public function deleteAll() {
         $sql = "DELETE FROM " . $this->table;
         $stmt = $this->conn->prepare($sql);
         try {
@@ -419,8 +402,7 @@ class Model
      * Returns the count of records in the given table
      * @return integer The count of records
      */
-    public function tableRecordCount()
-    {
+    public function tableRecordCount() {
         $query = "SELECT COUNT(*) FROM " . $this->table;
         $result = $this->conn->query($query)->fetchColumn();
         return $result;
@@ -433,9 +415,13 @@ class Model
      * @param boolean $count
      * @return mixed
      */
-    public function fetch($query, array $params = [], $count = false)
-    {
+    public function fetch($query, array $params = [], $count = false, $className = null) {
         $stmt = $this->conn->prepare($query);
+        if (isset($className)) {
+            $stmt->setFetchMode(PDO::FETCH_CLASS, $className);
+        } else {
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+        }
         try {
             $stmt->execute($params);
             if ($count == true) {
@@ -443,7 +429,7 @@ class Model
             } else {
                 $this->recordCount = 0;
             }
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetch();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;
@@ -457,9 +443,13 @@ class Model
      * @param boolean $count
      * @return array
      */
-    public function fetchAll($query, array $params = [], $count = false)
-    {
+    public function fetchAll($query, array $params = [], $count = false, $className = null) {
         $stmt = $this->conn->prepare($query);
+        if (isset($className)) {
+            $stmt->setFetchMode(PDO::FETCH_CLASS, $className);
+        } else {
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+        }
         try {
             $stmt->execute($params);
             if ($count == true) {
@@ -467,7 +457,8 @@ class Model
             } else {
                 $this->recordCount = 0;
             }
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $stmt->fetchAll();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;
@@ -480,8 +471,7 @@ class Model
      * @param array $params
      * @return boolean
      */
-    public function query($query, array $params = [])
-    {
+    public function query($query, array $params = []) {
         $stmt = $this->conn->prepare($query);
         try {
             return $stmt->execute($params);
@@ -498,8 +488,7 @@ class Model
      * @param boolean $count
      * @return boolean
      */
-    public function fetchColumn($query, array $params = [], $count = false)
-    {
+    public function fetchColumn($query, array $params = [], $count = false) {
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute($params);
@@ -514,4 +503,5 @@ class Model
             return false;
         }
     }
+
 }

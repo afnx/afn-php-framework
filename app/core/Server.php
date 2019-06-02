@@ -73,7 +73,7 @@ class Server
         $run_sql = new \AFN\App\Core\Model();
         $query = "SELECT NOW() AS date";
         $now = $run_sql->fetch($query);
-        return $now["date"];
+        return $now->date;
     }
 
     /**
