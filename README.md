@@ -18,6 +18,8 @@
 
 ---
 
+AFN PHP Framework is a customizable and lightweight PHP+MySQL web framework designed to streamline the development of modern web applications. With its modular architecture, intuitive routing, and built-in support for MySQL, it empowers developers to build scalable, secure, and maintainable solutions quickly. Whether you're creating a simple website or a complex system, AFN PHP Framework offers flexibility and extensibility for projects of any size.
+
 ## Features
 
 - **MVC Architecture**: Clean separation of concerns using the Model-View-Controller pattern.
